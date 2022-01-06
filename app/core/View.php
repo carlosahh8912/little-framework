@@ -7,32 +7,24 @@ use eftec\bladeonehtml\BladeOneHtml;
 
 class View extends BladeOne
 {
-
     use BladeOneHtml;
 
-    // public $views = __DIR__ . '/../resources/';
-    // public $cache = __DIR__ . '/../bin/cache/';
-    // public $blade;
+    public function errors()
+    {
+        $errorArray = getRequest();
 
-    // public function __construct()
-    // {
-    //     $this->render = new BladeOne($this->views, $this->cache, Self::MODE_DEBUG); // MODE_DEBUG allows to pinpoint troubles.;
-    //     // $this->render->setAuth('johndoe', 'admin'); // where johndoe is an user and admin is the role. The role is optional
+        if(is_array($errorArray) && !empty($errorArray)){
+
+            $errorCallback = function ($key = null) use ($errorArray) {
         
-    // }
-
-    // public function render($view, array $data = []){
-
-    //     // if(strpos($view, '.')){
-    //     //     $strings = explode('.',$view);
-    //     //     $buldView = [];
-    //     //     foreach($strings as $string){
-    //     //         $buldView[] = $string;
-    //     //     }
-
-    //     //     $view = implode('/', $buldView);
-    //     // }
-
-    //     echo $this->render->run("views/" . $view . ".blade.php", $data);
-    // }
+                if (array_key_exists($key, $errorArray)) {
+                    return $errorArray[$key][0];
+                }
+        
+                return false;
+            };
+        
+            $this->setErrorFunction($errorCallback);
+        }
+    }
 }

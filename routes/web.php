@@ -1,32 +1,38 @@
 <?php
 
 // define routes
-$router->get('/', function(){
-
-    $messages = [
-        'name' => 'error desde el controlador',
-        'name' => 'otro error'
-    ];    
-    return view('welcome', [], $messages);
+$router->get('/', function () {
+    return view('welcome');
 });
 
-$router->get('users', 'UserController@index');
-$router->get('register', 'UserController@register');
-$router->post('users/create', 'UserController@store');
-
-
-$router->before('GET|POST','/login', function(){
-    if (isset($_SESSION)) {
-        header('location: /');
+// Middelware
+$router->before('GET|POST', 'users', function () {
+    if (!isset($_SESSION['user_session'])) {
+        redirect("auth/login");
         exit();
     }
 });
 
-$router->get('login', 'AuthController@login');
-$router->post('login/auth', 'AuthController@auth');
+$router->before('GET|POST', 'users/.*', function () {
+    if (!isset($_SESSION['user_session'])) {
+        redirect("auth/login");
+        exit();
+    }
+});
 
 
-$router->get('test', function(){
-    flasher('hola mundo.');
+$router->mount('/users', function () use ($router) {
+
+    $router->get('/', 'UserController@index');
+    $router->get('/(\d+)', 'UserController@show');
+    $router->get('/(\d+)/edit', 'UserController@edit');
+
+});
+
+
+
+
+
+$router->get('test', function () {
     dd($_SESSION);
 });

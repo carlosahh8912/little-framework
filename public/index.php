@@ -8,7 +8,8 @@
 
 
 //Requiere archivo que contiene todas las configuraciones de la aplicación.
+
 require_once __DIR__ . '/../app/core/Application.php';
 
 // Inicia todas las configuraciones de la aplicación.
-$app = new Application;
+$app = new Application();

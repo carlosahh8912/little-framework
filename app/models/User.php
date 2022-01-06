@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Model
 {
-    use HasFactory;
-    use HasRolesAndAbilities;
+    use HasFactory, HasRolesAndAbilities;
 
     protected $fillable = [
         'name',

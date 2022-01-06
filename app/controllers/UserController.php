@@ -10,21 +10,12 @@ class UserController extends Controller
 {
     public function index(){
         $users = User::all();
-        return view('users.index', compact($users));
+        return view('users.index', compact('users'));
     }
 
-    public function register(){
-        return view('auth.register');
-    }
+    public function show($id){
+        $user = User::find($id);
 
-    public function store(){
-        $rules = [
-            'name' => 'required|min:3',
-            'email' => 'required|email',
-            'password' => 'required|min:5',
-            'retipe_password' => 'required|same:password'
-        ];
-
-        $validate = Validator::make($_REQUEST, $rules);
+        dd($user);
     }
 }

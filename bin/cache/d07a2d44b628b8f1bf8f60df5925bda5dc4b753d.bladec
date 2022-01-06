@@ -28,14 +28,26 @@
  <a class="nav-link active" aria-current="page" href="/">Home</a>
  </li>
  </ul>
+
+ <?php if(isset($this->currentUser)): ?>
  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
  <li class="nav-item">
- <a class="nav-link" aria-current="page" href="<?php echo \htmlentities(route('login'), ENT_QUOTES, 'UTF-8', false); ?>">Login</a>
+ <a class="nav-link"><?php echo \htmlentities(auth_user('name'), ENT_QUOTES, 'UTF-8', false); ?></a>
  </li>
  <li class="nav-item">
- <a class="nav-link" href="register">Register</a>
+ <a class="nav-link" href="logout">Logout</a>
  </li>
  </ul>
+ <?php else: ?>
+ <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+ <li class="nav-item">
+ <a class="nav-link" aria-current="page" href="<?php echo \htmlentities(route('auth/login'), ENT_QUOTES, 'UTF-8', false); ?>">Login</a>
+ </li>
+ <li class="nav-item">
+ <a class="nav-link" href="auth/register">Register</a>
+ </li>
+ </ul>
+ <?php endif; ?>
  </div>
  </div>
  </nav>
@@ -43,25 +55,7 @@
  <div class="container">
  <div class="row">
  <div class="col-12 p-5">
-
- <section>
-
- <ul id='name' >
- <?php  $_msgs=@'name'? $this->message()->get('name')->all() 
- : $this->message()->allArray() ;
- $_tmp='';  foreach($_msgs as $_msgk=>$_msg) {
-?>
-<li id="<?php echo $this->e('name'.'_'.$_msgk);?>" ><?php echo $this->e($_msg);?></li>
-<?php  } // foreach  ?>
-
- </ul>
-
- <span ><?php echo $this->e(($this->message())->get('name')->first('',));?></span>
-
- <?php echo \htmlentities(ROOT, ENT_QUOTES, 'UTF-8', false); ?>
-
- </section>
-
+ <?php echo \htmlentities(getError(), ENT_QUOTES, 'UTF-8', false); ?>
 
  </div>
  </div>

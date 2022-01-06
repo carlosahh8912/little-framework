@@ -28,14 +28,26 @@
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                 </ul>
+
+                @auth
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{ route('login') }}">Login</a>
+                        <a class="nav-link">{{ auth_user('name') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="register">Register</a>
+                        <a class="nav-link" href="logout">Logout</a>
                     </li>
                 </ul>
+                @else
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{{ route('auth/login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="auth/register">Register</a>
+                        </li>
+                    </ul>
+                @endauth
             </div>
         </div>
     </nav>
@@ -43,19 +55,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12 p-5">
-
-                <section>
-
-                    @messages(id='name')
-                        @items()
-                    @endmessages()
-
-                    @message(id='name')
-
-                    {{ ROOT }}
-                </section>
-
-
+                {{ getError() }}
             </div>
         </div>
     </div>

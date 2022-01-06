@@ -25,6 +25,8 @@
         "eftec/bladeone": "^4.2",
         "silber/bouncer": "v1.0.0-rc.11",
         "eftec/bladeonehtml": "^2.2",
-        "php-flasher/flasher": "^0.9.6"
+        "php-flasher/flasher": "^0.9.6",
+        "aura/session": "^2.1",
+        "gilbitron/easycsrf": "^1.5"
     }
 }

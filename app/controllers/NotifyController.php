@@ -1,17 +1,22 @@
 <?php
 
-namespace Controllers;
-use App\core\Controller;
-use Flasher\Prime\FlasherInterface;
+// namespace Controllers;
+// use App\core\Controller;
+// use Flasher\Prime\FlasherInterface;
+// use Flasher\Prime\Response\Response;
 
-class NotifyController extends Controller
-{
-    public function flasher(FlasherInterface $flasher)
-    {
-        // ...
-        // $flasher = new FlasherInterface;
-        $flasher->addFlash('success', 'Data has been saved successfully!');
+// class NotifyController extends Controller
+// {
+//     public function flasher(FlasherInterface $flasher) : Response
+//     {
+//         // ...
+//         // $flasher = new FlasherInterface;
+//         $flasher->addSuccess('Data has been saved successfully!');
 
-        // ... redirect or render a view here
-    }
-}
+//         $flasher->error('error prueba')
+//                 ->priority(1)->hops(3)->flash();
+
+//         // ... redirect or render a view here
+
+//     }
+// }

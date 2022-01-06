@@ -1,9 +1,13 @@
 <?php
 
+// namespace App\core;
+
 class Application
 {
 
     protected $db;
+    public $session;
+    public $user_session;
 
     public function __construct()
     {
@@ -13,8 +17,8 @@ class Application
     public function init()
     {
         $this->init_composer();
-        $this->init_sessions();
         $this->init_env();
+        $this->init_sessions();
         $this->init_config();
         $this->init_database();
         $this->init_helpers();
@@ -23,7 +27,7 @@ class Application
 
     public function init_sessions()
     {
-        $session = new \App\core\Session();
+        if (!session_id()) @session_start();
         return;
     }
 
@@ -102,12 +106,6 @@ class Application
         $router->base_path = '/';
         $router->namespace_controllers = '\Controllers';
         $router->run();
-        return;
-    }
-
-    public function run()
-    {
-        $application = new self;
         return;
     }
 }

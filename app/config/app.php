@@ -63,3 +63,6 @@ define('UPLOADED'   , ASSETS.'uploads/');
 // El controlador por defecto / el método por defecto de la página de error 
 define('DEFAULT_ERROR_CONTROLLER', 'errorController');
 define('DEFAULT_ERROR_METHOD'          , 'index'); //  errorController@index
+
+
+define('AUTH_SALT', env('AUTH_SALT', ''));

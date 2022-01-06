@@ -33,26 +33,118 @@ function messages(string $item, string $message, string $type = 'error')
     return render()->message()->addItem($item, $message, $type);
 }
 
-function view($view, $data = [], $messages = [])
+function view($view, $data = [])
 {
     $views = __DIR__ . '/../../resources/';
     $cache = __DIR__ . '/../../bin/cache/';
     $render = new \App\core\View($views, $cache, \App\core\View::MODE_AUTO);
-    if ($messages) {
-        foreach($messages as $key => $message){
-            $render->message()->addItem($key, $message);
-        }
+    $render->csrf_token = csrf()->generate('_token');
+    if(!empty(auth_user('name'))){
+        $render->setAuth(auth_user('name'));
     }
-    $render->message()->addItem('name', 'otro error mas helper');
-
+    $render->errors();
     $buildView = buildView($view);
     echo $render->run($buildView, $data);
     return;
 }
 
-
-function route(string $route)
+function session()
 {
+    $session_factory = new \Aura\Session\SessionFactory;
+    return $session = $session_factory->newInstance($_SESSION);
+}
+
+function flasher()
+{
+    // if ($message) {
+    //     $flasher = session()->getSegment('flasher');
+    //     $flasher->setFlash($type, $message);
+    // }
+    return $flasher = session()->getSegment('flasher');
+}
+
+function setSuccess($message)
+{
+    if ($message) {
+        // $flasher = session()->getSegment('flasher');
+        flasher()->setFlash('success', $message);
+    }
+    return;
+}
+
+function setInfo($message)
+{
+    if ($message) {
+        flasher()->setFlash('info', $message);
+    }
+    return;
+}
+
+function setError($message)
+{
+    if ($message) {
+        // $flasher = session()->getSegment('flasher');
+        // $flasher->setFlash('error', $message);
+        flasher()->setFlash('error', $message);
+    }
+    return;
+}
+
+function getError()
+{
+    return $error = flasher()->getFlash('error');
+}
+
+function request($message, $old = [])
+{
+    if(!empty($old) && is_array($old)){
+        $oldValues = session()->getSegment('old_values');
+        foreach($old as $key => $value){
+            $oldValues->setFlash($key, $value);
+        }
+    }
+
+    if ($message) {
+        $request = session()->getSegment('request');
+        $request->setFlash('error', $message);
+    }
+    return;
+}
+
+function getRequest()
+{
+    $request = session()->getSegment('request');
+    return $request->getFlash('error');
+}
+
+function old($value){
+    $oldValues = session()->getSegment('old_values');
+    return $oldValues->getFlash($value);
+}
+
+function csrf()
+{
+    $sessionProvider = new \EasyCSRF\NativeSessionProvider();
+    return $easyCSRF = new \EasyCSRF\EasyCSRF($sessionProvider);
+}
+
+function validCsrf($token, $timespan = null, $multiple = false)
+{
+    try {
+        csrf()->check('_token', $token, $timespan, $multiple);
+        return true;
+    } catch (\EasyCSRF\Exceptions\InvalidCsrfTokenException $e) {
+        // return $e->getMessage();
+        return false;
+    }
+}
+
+
+function route(string $route, $var = "")
+{
+    if($var != ""){
+        return URL . $route . '/' . $var;
+    }
     return URL . $route;
 }
 
@@ -74,6 +166,20 @@ function clean($str, $cleanhtml = false)
     }
 
     return filter_var($str, FILTER_SANITIZE_STRING);
+}
+
+function userSession($user){
+    $session = session()->getSegment('user_session');
+
+    $user_data = [
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'avatar' => $user->profile_photo_path
+    ];
+
+    $session->set('user',$user_data);
+    $session->set('id', $user->id);
 }
 
 function auth_user($key = null)
@@ -111,13 +217,14 @@ function valide_password($post_password, $password)
     return password_verify($post_password . $_ENV['AUTH_SALT'], $password);
 }
 
-// function redirect(){
-//     $urlGenerator = new \Illuminate\Routing\UrlGenerator();
-//     $redirect = new \App\core\Redirect($urlGenerator);
-// }
+function redirect($location)
+{
+    $redirect = new \App\core\Redirect;
+    return $redirect::to($location);
+}
 
-function flasher($message, $type = 'success'){
-    // $flasher = new \Flasher\Prime\FlasherInterface;
-    // return $flasher->addFlash($message);
-
+function back()
+{
+    $redirect = new \App\core\Redirect;
+    return $redirect::back();
 }

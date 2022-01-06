@@ -13,12 +13,32 @@
  <div class="col-12 col-md-6">
  <div class="card shadow py-5 px-3">
  <div class="card-body">
- <form method="POST" action="<?php echo \htmlentities(route('users/create'), ENT_QUOTES, 'UTF-8', false); ?>">
- <input type='hidden' name='_method' value='<?php echo 'POST'; ?>'/>
- <input type="text" class="form-control mb-3" name="name" placeholder="Name">
- <input type="email" class="form-control mb-3" name="email" placeholder="Email">
- <input type="password" class="form-control mb-3" name="password" placeholder="Password">
- <input type="password" class="form-control mb-3" name="retypePassword" placeholder="Retype Password">
+ <form method="POST" action="<?php echo \htmlentities(route('auth/create'), ENT_QUOTES, 'UTF-8', false); ?>">
+ <input type='hidden' name='<?php  echo '_token'; ?>' value='<?php echo $this->csrf_token; ?>'/>
+ <div class="form-group mb-3">
+ <label for="" class="form-label">Name</label>
+ <input type="text" class="form-control <?php $message = call_user_func($this->errorCallBack,'name'); if ($message): ?> is-invalid <?php endif; ?>" name="name" placeholder="Name" value="<?php echo \htmlentities(old('name'), ENT_QUOTES, 'UTF-8', false); ?>" required>
+ <?php $message = call_user_func($this->errorCallBack,'name'); if ($message): ?> <small class="text-danger"><?php echo \htmlentities($message, ENT_QUOTES, 'UTF-8', false); ?></small> <?php endif; ?>   
+ </div>
+
+ <div class="form-group mb-3">
+ <label for="" class="form-label">Email</label>
+ <input type="email" class="form-control <?php $message = call_user_func($this->errorCallBack,'email'); if ($message): ?> is-invalid <?php endif; ?>" name="email" placeholder="Email" required>
+ <?php $message = call_user_func($this->errorCallBack,'email'); if ($message): ?> <small class="text-danger"><?php echo \htmlentities($message, ENT_QUOTES, 'UTF-8', false); ?></small> <?php endif; ?>  
+ </div>
+
+ <div class="form-group mb-3">
+ <label for="" class="form-label">Password</label>
+ <input type="password" class="form-control <?php $message = call_user_func($this->errorCallBack,'password'); if ($message): ?> is-invalid <?php endif; ?>" name="password" placeholder="Password" required>
+ <?php $message = call_user_func($this->errorCallBack,'password'); if ($message): ?> <small class="text-danger"><?php echo \htmlentities($message, ENT_QUOTES, 'UTF-8', false); ?></small> <?php endif; ?>  
+ </div>
+
+ <div class="form-group mb-3">
+ <label for="" class="form-label">Retype Password</label>
+ <input type="password" class="form-control <?php $message = call_user_func($this->errorCallBack,'retypePassword'); if ($message): ?> is-invalid <?php endif; ?>" name="retypePassword" placeholder="Retype Password" required>
+ <?php $message = call_user_func($this->errorCallBack,'retypePassword'); if ($message): ?> <small class="text-danger"><?php echo \htmlentities($message, ENT_QUOTES, 'UTF-8', false); ?></small> <?php endif; ?>    
+ </div>
+ 
  <button class="btn btn-primary w-100">Register</button>
  </form>
  </div>
