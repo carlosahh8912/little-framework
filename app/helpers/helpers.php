@@ -95,7 +95,7 @@ function getError()
     return $error = flasher()->getFlash('error');
 }
 
-function request($message, $old = [])
+function setRequest($message, $old = [])
 {
     if(!empty($old) && is_array($old)){
         $oldValues = session()->getSegment('old_values');
@@ -128,9 +128,19 @@ function csrf()
     return $easyCSRF = new \EasyCSRF\EasyCSRF($sessionProvider);
 }
 
-function validCsrf($token, $timespan = null, $multiple = false)
+function validCsrf($token = "", $timespan = null, $multiple = false)
 {
     try {
+        if (empty($token)) {
+            if(isset($_REQUEST)){
+                $token = request("_token");
+            }elseif(isset($_POST)){
+                $token = post("_token");
+            }elseif(isset($_GET)){
+                $token = get("_token");
+            }
+        }
+
         csrf()->check('_token', $token, $timespan, $multiple);
         return true;
     } catch (\EasyCSRF\Exceptions\InvalidCsrfTokenException $e) {
@@ -172,6 +182,7 @@ function userSession($user){
     $session = session()->getSegment('user_session');
 
     $user_data = [
+        'auth' => true,
         'id' => $user->id,
         'name' => $user->name,
         'email' => $user->email,
@@ -227,4 +238,25 @@ function back()
 {
     $redirect = new \App\core\Redirect;
     return $redirect::back();
+}
+
+function post($value){
+    if(isset($_POST)){
+        return $_POST[$value];
+    }
+    return NULL;
+}
+
+function get($value){
+    if(isset($_GET)){
+        return $_GET[$value];
+    }
+    return NULL;
+}
+
+function request($value){
+    if(isset($_REQUEST)){
+        return $_REQUEST[$value];
+    }
+    return NULL;
 }

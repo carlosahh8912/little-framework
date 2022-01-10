@@ -27,6 +27,7 @@
         "eftec/bladeonehtml": "^2.2",
         "php-flasher/flasher": "^0.9.6",
         "aura/session": "^2.1",
-        "gilbitron/easycsrf": "^1.5"
+        "gilbitron/easycsrf": "^1.5",
+        "symfony/http-foundation": "^5.4"
     }
 }

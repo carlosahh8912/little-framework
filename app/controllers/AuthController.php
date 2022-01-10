@@ -4,18 +4,25 @@ namespace Controllers;
 
 use Models\User;
 use App\core\Controller;
-use Progsmile\Validator\Validator;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthController extends Controller
 {
+    public $rules = [
+        'name' => 'required|min:3',
+        'email' => 'required|email',
+        'password' => 'required|min:5',
+        'retypePassword' => 'required|same:password'
+    ];
+
     public function login(){
         return view('auth.login');
     }
 
     public function auth(){
 
-        if(!validCsrf($_REQUEST['_token'])){
-            request('Token expired.');
+        if(!validCsrf()){
+            setError('Token expired.');
             redirect('auth/login');
         }
 
@@ -24,10 +31,11 @@ class AuthController extends Controller
             'password' => 'required'
         ];
 
-        $validate = Validator::make($_REQUEST, $rules);
+        // $validate = Validator::make($_REQUEST, $rules);
+        $validate = $this->validate($rules);
 
         if($validate->fails()){
-            request($validate->raw());
+            setRequest($validate->raw());
             redirect('auth/login');
             return;
         }
@@ -51,21 +59,20 @@ class AuthController extends Controller
 
     public function newUser(){
 
-        if(!validCsrf($_REQUEST['_token']) && $_REQUEST['_method'] != 'POST'){
+        if(!validCsrf() && post('_method') != 'POST'){
             redirect('expired');
         }
 
-        $rules = [
-            'name' => 'required|min:3',
-            'email' => 'required|email',
-            'password' => 'required|min:5',
-            'retypePassword' => 'required|same:password'
-        ];
+        $request = Request::createFromGlobals();
 
-        $validate = Validator::make($_REQUEST, $rules);
+        dd($request->request->get('name'));
+        return;
+
+        // $validate = Validator::make($_REQUEST, $rules);
+        $validate = $this->validate();
 
         if($validate->fails()){
-            request($validate->raw(), $_REQUEST);
+            setRequest($validate->raw(), $_REQUEST);
             redirect('auth/register');
         }
 
