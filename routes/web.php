@@ -26,7 +26,8 @@ $router->mount('/users', function () use ($router) {
     $router->get('/', 'UserController@index');
     $router->get('/(\d+)', 'UserController@show');
     $router->get('/(\d+)/edit', 'UserController@edit');
-
+    $router->match('PUT|PATCH','/(\d+)/update' ,'UserController@update');
+    
 });
 
 

@@ -10,6 +10,7 @@ class Controller extends BaseController
 
     public $rules;
     public $userMessagges = [];
+    public Request $request;
 
     public function validate($rules = [], $userMessagges = []){
 

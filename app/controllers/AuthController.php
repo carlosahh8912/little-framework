@@ -40,7 +40,7 @@ class AuthController extends Controller
             return;
         }
 
-        $user = User::firstWhere('email', $_REQUEST['email']);
+        $user = User::firstWhere('email', post('email'));
 
         if(!valide_password($_REQUEST['password'], $user->password)){
             setError('El usuario o la contraseña son incorrectos');
@@ -63,9 +63,10 @@ class AuthController extends Controller
             redirect('expired');
         }
 
-        $request = Request::createFromGlobals();
+        $this->request;
+        // $request = Request::createFromGlobals();
 
-        dd($request->request->get('name'));
+        dd($this->request);
         return;
 
         // $validate = Validator::make($_REQUEST, $rules);
@@ -77,9 +78,9 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => ucfirst($_REQUEST['name']),
-            'email' => $_REQUEST['email'],
-            'password' => password($_REQUEST['password'])
+            'name' => ucfirst(request('name')),
+            'email' => request('email'),
+            'password' => password(request('password'))
         ]);
 
         redirect('auth/login');
