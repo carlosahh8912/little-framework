@@ -234,10 +234,11 @@ function redirect($location)
     return $redirect::to($location);
 }
 
-function back()
+function back($location = '')
 {
     $redirect = new \App\core\Redirect;
-    return $redirect::back();
+
+    return $redirect::back($location);
 }
 
 function post($value){

@@ -40,7 +40,7 @@ class AuthController extends Controller
             return;
         }
 
-        $user = User::firstWhere('email', post('email'));
+        $user = User::firstWhere('email', $this->request->email);
 
         if(!valide_password($_REQUEST['password'], $user->password)){
             setError('El usuario o la contraseña son incorrectos');
@@ -59,28 +59,25 @@ class AuthController extends Controller
 
     public function newUser(){
 
-        if(!validCsrf() && post('_method') != 'POST'){
-            redirect('expired');
-        }
-
-        $this->request;
-        // $request = Request::createFromGlobals();
-
-        dd($this->request);
-        return;
+        // dd($this->redirect);
 
         // $validate = Validator::make($_REQUEST, $rules);
         $validate = $this->validate();
 
+        if (User::firstWhere('email', $this->request->email)) {
+            setError('El correo ya esta registrado');
+            redirect($this->redirect);
+        }
+
         if($validate->fails()){
-            setRequest($validate->raw(), $_REQUEST);
-            redirect('auth/register');
+            setRequest($validate->raw(), $this->request);
+            redirect($this->redirect);
         }
 
         $user = User::create([
-            'name' => ucfirst(request('name')),
-            'email' => request('email'),
-            'password' => password(request('password'))
+            'name' => ucwords($this->request->name),
+            'email' => $this->request->email,
+            'password' => password($this->request->password)
         ]);
 
         redirect('auth/login');

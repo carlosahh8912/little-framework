@@ -10,7 +10,22 @@ class Controller extends BaseController
 
     public $rules;
     public $userMessagges = [];
-    public Request $request;
+    public Request $requestBag;
+    protected $request;
+    protected $redirect;
+
+    function __construct()
+    {
+        $this->requestBag = Request::createFromGlobals();
+        $this->request = (object) $this->requestBag->request->all();
+        $this->redirect = $this->requestBag->server->get('HTTP_REFERER');
+
+        if ($this->requestBag->getMethod() == 'POST') {
+            if(!validCsrf()){
+                redirect('expired');
+            }
+        }
+    }
 
     public function validate($rules = [], $userMessagges = []){
 
@@ -29,5 +44,17 @@ class Controller extends BaseController
         }
 
         return NULL;
+    }
+
+    public function back(){
+        if ($this->redirect = '') {
+            header('Location: ' . URL);
+            die();
+        }
+
+        if ($this->redirect) {
+            header('Location: ' . $this->redirect);
+            die();
+        }
     }
 }

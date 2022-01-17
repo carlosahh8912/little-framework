@@ -50,7 +50,7 @@ class Redirect extends FacadesRedirect
     public static function back($location = '')
     {
         if (!isset($_POST['redirect_to']) && !isset($_GET['redirect_to']) && $location == '') {
-            header('Location: ' . URL . '/');
+            header('Location: ' . URL);
             die();
         }
 
