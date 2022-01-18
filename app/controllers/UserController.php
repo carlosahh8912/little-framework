@@ -16,6 +16,24 @@ class UserController extends Controller
     public function show($id){
         $user = User::find($id);
 
+        $this->middleware('atuh');
+
         dd($user);
+    }
+
+    public function store(){
+
+    }
+
+    public function edit(){
+
+    }
+
+    public function update($id){
+
+    }
+
+    public function destroy($id){
+
     }
 }

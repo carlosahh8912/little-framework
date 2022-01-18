@@ -13,7 +13,7 @@ $router->before('GET|POST', 'users', function () {
     }
 });
 
-$router->before('GET|POST', 'users/.*', function () {
+$router->before('GET|POST|PUT', 'users/.*', function () {
     if (!isset($_SESSION['user_session'])) {
         redirect("auth/login");
         exit();

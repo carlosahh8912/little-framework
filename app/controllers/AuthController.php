@@ -21,17 +21,11 @@ class AuthController extends Controller
 
     public function auth(){
 
-        if(!validCsrf()){
-            setError('Token expired.');
-            redirect('auth/login');
-        }
-
         $rules = [
             'email' => 'required|email',
             'password' => 'required'
         ];
 
-        // $validate = Validator::make($_REQUEST, $rules);
         $validate = $this->validate($rules);
 
         if($validate->fails()){
@@ -41,6 +35,11 @@ class AuthController extends Controller
         }
 
         $user = User::firstWhere('email', $this->request->email);
+
+        if(!$user){
+            setError('Error en la validación tu usario o contraseña no son correctos.');
+            redirect($this->redirect);
+        }
 
         if(!valide_password($_REQUEST['password'], $user->password)){
             setError('El usuario o la contraseña son incorrectos');
@@ -59,9 +58,6 @@ class AuthController extends Controller
 
     public function newUser(){
 
-        // dd($this->redirect);
-
-        // $validate = Validator::make($_REQUEST, $rules);
         $validate = $this->validate();
 
         if (User::firstWhere('email', $this->request->email)) {

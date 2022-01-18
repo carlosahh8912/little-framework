@@ -24,6 +24,7 @@
                             <td>{{ $user->created_at }}</td>
                             <td>
                                 <a href="{{ route('users', $user->id) }}" class="btn btn-link" >View</a>
+                                <a href="{{ route('users/edit/', $user->id) }}" class="btn btn-link" >Edit</a>
                             </td>
                         </tr>
                     @empty
