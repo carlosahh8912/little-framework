@@ -20,7 +20,7 @@ class User extends Model
         'password',
     ];
 
-    protected $appends = [
-        'profile_photo_url',
-    ];
+    // protected $appends = [
+    //     'profile_photo_url',
+    // ];
 }

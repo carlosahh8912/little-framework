@@ -24,6 +24,7 @@ $router->before('GET|POST|PUT', 'users/.*', function () {
 $router->mount('/users', function () use ($router) {
 
     $router->get('/', 'UserController@index');
+    $router->get('/list', 'UserController@list');
     $router->get('/(\d+)', 'UserController@show');
     $router->get('/(\d+)/edit', 'UserController@edit');
     $router->match('PUT|PATCH','/(\d+)/update' ,'UserController@update');

@@ -21,6 +21,11 @@ class UserController extends Controller
         dd($user);
     }
 
+    public function list(){
+        $users = User::all();
+        return component('userList', compact('users'));
+    }
+
     public function store(){
 
     }

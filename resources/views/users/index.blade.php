@@ -3,7 +3,7 @@
 @section('title', 'Usuarios')
 
 @section('content')
-    
+
     <div class="raw">
         <div class="col-12">
 
@@ -23,8 +23,8 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->created_at }}</td>
                             <td>
-                                <a href="{{ route('users', $user->id) }}" class="btn btn-link" >View</a>
-                                <a href="{{ route('users/edit/', $user->id) }}" class="btn btn-link" >Edit</a>
+                                <a href="{{ route('users', $user->id) }}" class="btn btn-link">View</a>
+                                <a href="{{ route('users/edit/', $user->id) }}" class="btn btn-link">Edit</a>
                             </td>
                         </tr>
                     @empty
@@ -38,6 +38,30 @@
         </div>
     </div>
 
+    <div class="py-5" id="list">
+
+    </div>
 
 @endsection
-    
+
+
+@push('scripts')
+    <script>
+        (() => {
+            axios
+            .get('/users/list')
+            .then(res => {
+                console.log(res);
+                list = document.getElementById('list');
+                list.innerHTML = res.data;
+            })
+            .catch(error => {
+                console.log(error.response);
+            })
+            .finally(()=> {
+                console.log('termino la ejecución de axios');
+            });
+
+        })();
+    </script>
+@endpush

@@ -31,7 +31,8 @@ define('CUR_PAGE'   , PROTOCOL.'://'.HOST.REQUEST_URI); // URL actual incluyendo
 
 // Las rutas de directorios y archivos
 define('DS'         , DIRECTORY_SEPARATOR);
-define('ROOT'       , getcwd().DS);
+// define('ROOT'       , getcwd().DS);
+define('ROOT'       , realpath('..').DS);
 
 define('APP'        , ROOT.'app'.DS);
 define('CLASSES'    , APP.'classes'.DS);

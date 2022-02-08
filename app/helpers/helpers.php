@@ -28,6 +28,27 @@ function buildView($view)
     return;
 }
 
+function buildComponent($component)
+{
+    if ($component != '') {
+        if (strpos($component, '.blade.php')) {
+
+            return 'views/' . $component;
+        } else {
+            if (strpos($component, '.')) {
+                $strings = explode('.', $component);
+                $buldView = [];
+                foreach ($strings as $string) {
+                    $buldView[] = $string;
+                }
+                $component = implode('/', $buldView);
+            }
+        }
+        return 'components/' . $component .  render()->getFileExtension();
+    }
+    return;
+}
+
 function messages(string $item, string $message, string $type = 'error')
 {
     return render()->message()->addItem($item, $message, $type);
@@ -39,11 +60,19 @@ function view($view, $data = [])
     $cache = __DIR__ . '/../../bin/cache/';
     $render = new \App\core\View($views, $cache, \App\core\View::MODE_AUTO);
     $render->csrf_token = csrf()->generate('_token');
-    if(!empty(auth_user('name'))){
+    if (!empty(auth_user('name'))) {
         $render->setAuth(auth_user('name'));
     }
     $render->errors();
     $buildView = buildView($view);
+    echo $render->run($buildView, $data);
+    return;
+}
+
+function component($view, $data = [])
+{
+    $render = render();
+    $buildView = buildComponent($view);
     echo $render->run($buildView, $data);
     return;
 }
@@ -97,9 +126,9 @@ function getError()
 
 function setRequest($message, $old = [])
 {
-    if(!empty($old) && is_array($old)){
+    if (!empty($old) && is_array($old)) {
         $oldValues = session()->getSegment('old_values');
-        foreach($old as $key => $value){
+        foreach ($old as $key => $value) {
             $oldValues->setFlash($key, $value);
         }
     }
@@ -117,7 +146,8 @@ function getRequest()
     return $request->getFlash('error');
 }
 
-function old($value){
+function old($value)
+{
     $oldValues = session()->getSegment('old_values');
     return $oldValues->getFlash($value);
 }
@@ -132,11 +162,11 @@ function validCsrf($token = "", $timespan = null, $multiple = false)
 {
     try {
         if (empty($token)) {
-            if(isset($_REQUEST)){
+            if (isset($_REQUEST)) {
                 $token = request("_token");
-            }elseif(isset($_POST)){
+            } elseif (isset($_POST)) {
                 $token = post("_token");
-            }elseif(isset($_GET)){
+            } elseif (isset($_GET)) {
                 $token = get("_token");
             }
         }
@@ -152,7 +182,7 @@ function validCsrf($token = "", $timespan = null, $multiple = false)
 
 function route(string $route, $var = "")
 {
-    if($var != ""){
+    if ($var != "") {
         return URL . $route . '/' . $var;
     }
     return URL . $route;
@@ -178,7 +208,8 @@ function clean($str, $cleanhtml = false)
     return filter_var($str, FILTER_SANITIZE_STRING);
 }
 
-function userSession($user){
+function userSession($user)
+{
     $session = session()->getSegment('user_session');
 
     $user_data = [
@@ -189,7 +220,7 @@ function userSession($user){
         'avatar' => $user->profile_photo_path
     ];
 
-    $session->set('user',$user_data);
+    $session->set('user', $user_data);
     $session->set('id', $user->id);
 }
 
@@ -241,23 +272,63 @@ function back($location = '')
     return $redirect::back($location);
 }
 
-function post($value){
-    if(isset($_POST)){
+function post($value)
+{
+    if (isset($_POST)) {
         return $_POST[$value];
     }
     return NULL;
 }
 
-function get($value){
-    if(isset($_GET)){
+function get($value)
+{
+    if (isset($_GET)) {
         return $_GET[$value];
     }
     return NULL;
 }
 
-function request($value){
-    if(isset($_REQUEST)){
+function request($value)
+{
+    if (isset($_REQUEST)) {
         return $_REQUEST[$value];
     }
     return NULL;
+}
+
+function json_output($json, $die = true)
+{
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/json;charset=utf-8');
+
+    if (is_array($json)) {
+        $json = json_encode($json);
+    }
+
+    echo $json;
+
+    if ($die === true) {
+        die;
+    }
+
+    return true;
+}
+
+function get_component($view, $data = [])
+{
+    $file_to_include = COMPONENTS . $view . '.blade.php';
+    $output = '';
+
+    // Por si queremos trabajar con objeto
+    // $d = to_object($data);
+
+    if (!is_file($file_to_include)) {
+        return false;
+    }
+
+    ob_start();
+    require_once $file_to_include;
+    $output = ob_get_clean();
+
+    return $output;
 }
