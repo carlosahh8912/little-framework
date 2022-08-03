@@ -1,5 +1,6 @@
 bin/cache
 .idea
 vendor
-composer.lock
 .env
+node_modules
+storage/framework/cache

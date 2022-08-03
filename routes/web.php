@@ -1,5 +1,8 @@
 <?php
 
+use Flasher\Prime\FlasherInterface;
+
+
 // define routes
 $router->get('/', function () {
     return view('welcome');
@@ -27,14 +30,14 @@ $router->mount('/users', function () use ($router) {
     $router->get('/list', 'UserController@list');
     $router->get('/(\d+)', 'UserController@show');
     $router->get('/(\d+)/edit', 'UserController@edit');
-    $router->match('PUT|PATCH','/(\d+)/update' ,'UserController@update');
-    
+    $router->match('PUT|PATCH', '/(\d+)/update', 'UserController@update');
 });
 
 
 
 
-
 $router->get('test', function () {
-    dd($_SESSION);
+
+
+    dd($_SESSION, auth());
 });

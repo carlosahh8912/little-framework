@@ -205,7 +205,7 @@ function clean($str, $cleanhtml = false)
         return htmlspecialchars($str);
     }
 
-    return filter_var($str, FILTER_SANITIZE_STRING);
+    return filter_var($str, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 }
 
 function userSession($user)
@@ -222,6 +222,9 @@ function userSession($user)
 
     $session->set('user', $user_data);
     $session->set('id', $user->id);
+
+    $session = session()->getSegment('auth');
+    $session->set('user', $user);
 }
 
 function auth_user($key = null)
@@ -233,6 +236,24 @@ function auth_user($key = null)
     if (!isset($session['user']) || empty($session['user'])) return false;
 
     $user = $session['user']; // información de la base de datos o directamente insertada del usuario
+
+    if ($key === null) return $user;
+
+    if (!isset($user[$key])) return false; // regresará falso en caso de no encontrar el key buscado
+
+    // Regresa la información del usuario
+    return $user[$key];
+}
+
+function auth($key = null)
+{
+    if (!isset($_SESSION['auth'])) return false;
+
+    $auth = $_SESSION['auth']; // información de la sesión del usuario actual, regresará siempre falso si no hay dicha sesión
+
+    if (!isset($auth['user']) || empty($auth['user'])) return false;
+
+    $user = $auth['user']; // información de la base de datos o directamente insertada del usuario
 
     if ($key === null) return $user;
 

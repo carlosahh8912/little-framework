@@ -24,7 +24,7 @@
                             <td>{{ $user->created_at }}</td>
                             <td>
                                 <a href="{{ route('users', $user->id) }}" class="btn btn-link">View</a>
-                                <a href="{{ route('users/edit/', $user->id) }}" class="btn btn-link">Edit</a>
+                                <a href="{{ route('users/edit', $user->id) }}" class="btn btn-link">Edit</a>
                             </td>
                         </tr>
                     @empty
@@ -49,14 +49,14 @@
     <script>
         (() => {
             axios
-            .get('/users/list')
+            .get("{{ route('/users/list') }}")
             .then(res => {
                 console.log(res);
                 list = document.getElementById('list');
                 list.innerHTML = res.data;
             })
             .catch(error => {
-                console.log(error.response);
+                console.error(error.response);
             })
             .finally(()=> {
                 console.log('termino la ejecución de axios');
